@@ -29,8 +29,8 @@ public class AESHelper {
     // Uses SHA-256 (and so a 256-bit key)
     private static final String HASH_ALGORITHM = "SHA-256";
 
-    // Uses blank IV (not the best security, but the aim here is compatibility)
-    private static final byte[] ivBytes = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    private static final byte[] ivBytesEmpty = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    private static byte[] ivBytes;
 
     // Toggleable log option (please turn off in live!)
     public static boolean DEBUG_LOG_ENABLED = true;
@@ -66,6 +66,9 @@ public class AESHelper {
             final SecretKeySpec key = generateKey(password);
 
             log("message", message);
+
+            ivBytes = new RandomString(16).nextString().getBytes();
+            log("ivBytes", ivBytes);
 
             byte[] cipherText = encrypt(key, ivBytes, message.getBytes(CHARSET));
 
@@ -119,7 +122,7 @@ public class AESHelper {
             byte[] decodedCipherText = Base64.decode(base64EncodedCipherText, Base64.NO_WRAP);
             log("decodedCipherText", decodedCipherText);
 
-            byte[] decryptedBytes = decrypt(key, ivBytes, decodedCipherText);
+            byte[] decryptedBytes = decrypt(key, (ivBytes == null || ivBytes.length < 1) ? ivBytesEmpty : ivBytes, decodedCipherText);
 
             log("decryptedBytes", decryptedBytes);
             String message = new String(decryptedBytes, CHARSET);
