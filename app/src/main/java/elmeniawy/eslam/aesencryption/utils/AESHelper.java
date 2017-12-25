@@ -1,4 +1,4 @@
-package elmeniawy.eslam.aesencryption;
+package elmeniawy.eslam.aesencryption.utils;
 
 import android.util.Base64;
 import android.util.Log;
@@ -33,7 +33,7 @@ public class AESHelper {
     private static byte[] ivBytes;
 
     // Toggleable log option (please turn off in live!)
-    public static boolean DEBUG_LOG_ENABLED = true;
+    private static boolean DEBUG_LOG_ENABLED = true;
 
     /**
      * Generates SHA256 hash of the password which is used as key
