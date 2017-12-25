@@ -2,11 +2,10 @@ package elmeniawy.eslam.aesencryption;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
-
-import java.nio.charset.Charset;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,11 +19,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText(getSecretKey());
+        final EditText et = findViewById(R.id.entered_text);
+        Button bt = findViewById(R.id.encrypt);
+        final TextView tv = findViewById(R.id.encrypted_text);
 
-        try {
+        bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (et.getText() == null || et.getText().toString().isEmpty()) {
+                    tv.setText("No text entered!");
+                    return;
+                }
+
+                try {
+                    String encryptedData = AESHelper.encrypt(getSecretKey(), et.getText().toString());
+                    tv.setText(encryptedData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    tv.setText("Error!");
+                }
+            }
+        });
+
+        /*try {
             Log.e("1234567890abcdef", Arrays.toString("1234567890abcdef".getBytes(Charset.forName("UTF-8"))));
             String encryptedData = AESHelper.encrypt(getSecretKey(), "This should be encrypted.");
             Log.v("EncryptDecrypt", "Encoded String " + encryptedData);
@@ -34,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             tv.append("\n\nDecoded String " + decryptedData);
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     /**
